@@ -22,13 +22,13 @@ class APODResponseDTO {
 
   factory APODResponseDTO.fromJson(Map<String, dynamic> json) {
     return APODResponseDTO(
-      date: json['date'],
-      explanation: json['explanation'],
-      hdurl: json['hdurl'],
-      mediaType: json['media_type'],
-      serviceVersion: json['service_version'],
-      title: json['title'],
-      url: json['url'],
+      date: json['date'] ?? '',
+      explanation: json['explanation'] ?? '',
+      hdurl: json['hdurl'] ?? '',
+      mediaType: json['media_type'] ?? '',
+      serviceVersion: json['service_version'] ?? '',
+      title: json['title'] ?? '',
+      url: json['url'] ?? '',
     );
   }
 }

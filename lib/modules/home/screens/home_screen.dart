@@ -1,6 +1,10 @@
+import 'package:astronomy_gallery/data/datasource/remote/api/apod_api.dart';
+import 'package:astronomy_gallery/data/repositories/apod_repository.dart';
 import 'package:astronomy_gallery/domain/models/astronomy_picture_model.dart';
 import 'package:astronomy_gallery/modules/home/widgets/astronomy_picture_list_item.dart';
 import 'package:astronomy_gallery/modules/apod_detail/screens/picture_detail_screen.dart';
+import 'package:dio/dio.dart';
+import 'package:logger/logger.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -8,7 +12,7 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<AstronomyPictureModel> astronomyPictures = AstronomyPictureModel.astronomyPictures;
+    List<AstronomyPictureModel> astronomyPictures = getAstronomyPictures();
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -71,15 +75,15 @@ class HomeScreen extends StatelessWidget {
                           context,
                           MaterialPageRoute(
                             // builder: (context) => AstronomyPictureDetailScreen(movie: movie),
-                            builder: (context) => PictureDetailScreen(astronomyPicture: picture),
+                            builder: (context) =>
+                                PictureDetailScreen(astronomyPicture: picture),
                           ),
                         );
                       },
                       child: AstronomyPictureListItem(
                         title: picture.title,
                         imageUrl: picture.url,
-                        information:
-                            '${picture.date} | ${picture.explanation}',
+                        information: '${picture.date} | ${picture.explanation}',
                       ),
                     ),
                 ],
@@ -89,6 +93,19 @@ class HomeScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  List<AstronomyPictureModel> getAstronomyPictures() {
+    const apiKey = "DIJtrZ1BcoBUmv8BnNcoz67g1YeZaa9Zq8jkDnEU";
+    // const apiKey = "sdsfsdf";
+    final logger = Logger();
+    final dio = Dio();
+    final APODRepository apodRepository = APODRepository(apodApi: APODApi(dio));
+    apodRepository.getApods(10, true, apiKey).then((value) {
+      logger.i(value);
+      return value;
+    });
+    return AstronomyPictureModel.astronomyPictures;
   }
 }
 
