@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:astronomy_gallery/app/modules/home/screens/home_screen.dart';
+import 'package:astronomy_gallery/modules/home/screens/home_screen.dart';
 
 void main() {
   runApp(const MyApp());

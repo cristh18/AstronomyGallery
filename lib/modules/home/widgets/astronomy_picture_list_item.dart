@@ -7,11 +7,11 @@ class AstronomyPictureListItem extends StatelessWidget {
   final GlobalKey backgroundImageKey = GlobalKey();
 
   AstronomyPictureListItem({
-    Key? key,
+    super.key,
     required this.title,
     required this.imageUrl,    
     required this.information,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +25,7 @@ class AstronomyPictureListItem extends StatelessWidget {
             children: [
               Flow(
                 delegate: _ParallaxFlowDelegate(
-                  scrollable: Scrollable.of(context)!,
+                  scrollable: Scrollable.of(context),
                   listItemContext: context,
                   backgroundImageKey: backgroundImageKey,
                 ),

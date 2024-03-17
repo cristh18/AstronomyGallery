@@ -1,11 +1,11 @@
-import 'package:astronomy_gallery/app/domain/models/astronomy_picture_model.dart';
+import 'package:astronomy_gallery/domain/models/astronomy_picture_model.dart';
 import 'package:flutter/material.dart';
 
 class PictureDetailScreen extends StatelessWidget {
   const PictureDetailScreen({
-    Key? key,
+    super.key,
     required this.astronomyPicture,
-  }) : super(key: key);
+  });
 
   final AstronomyPictureModel astronomyPicture;
 
