@@ -29,4 +29,9 @@ class AstronomyPictureModel {
       serviceVersion: 'v1',
     )
   ];
+
+  @override
+  String toString() {
+    return 'AstronomyPictureModel(title: $title, date: $date, url: $url, hdurl: $hdurl, mediaType: $mediaType)';
+  }
 }

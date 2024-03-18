@@ -1,21 +1,17 @@
-import 'package:astronomy_gallery/data/datasource/remote/api/apod_api.dart';
-import 'package:astronomy_gallery/data/repositories/apod_repository.dart';
 import 'package:astronomy_gallery/domain/models/astronomy_picture_model.dart';
 import 'package:astronomy_gallery/presentation/home/cubit/home_cubit.dart';
 import 'package:astronomy_gallery/presentation/home/ui/items/astronomy_picture_list_item.dart';
 import 'package:astronomy_gallery/presentation/apod_detail/screens/picture_detail_screen.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:logger/logger.dart';
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class HomeView extends StatelessWidget {
   const HomeView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // List<AstronomyPictureModel> astronomyPictures = getAstronomyPictures();
-
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -30,7 +26,7 @@ class HomeView extends StatelessWidget {
             color: const Color(0xFF000B49),
             child: Center(
               child: Text(
-                'Explore',
+                AppLocalizations.of(context)!.explore,
                 style: Theme.of(context)
                     .textTheme
                     .headlineSmall!
@@ -55,6 +51,10 @@ class HomeView extends StatelessWidget {
             case HomeStatus.success:
               List<AstronomyPictureModel> astronomyPictures =
                   state.astronomyPictures;
+              final logger = Logger();
+              for (var element in astronomyPictures) {
+                logger.i(element.toString());
+              }
               return getAPODBodyView(context, astronomyPictures);
           }
         },
@@ -80,37 +80,39 @@ class HomeView extends StatelessWidget {
                     style: Theme.of(context).textTheme.titleLarge,
                     children: [
                       TextSpan(
-                        text: 'Featured ',
+                        text: AppLocalizations.of(context)!.featured,
                         style: Theme.of(context)
                             .textTheme
                             .titleLarge!
                             .copyWith(fontWeight: FontWeight.bold),
                       ),
-                      const TextSpan(
-                        text: 'Pictures',
+                      TextSpan(
+                        text: AppLocalizations.of(context)!.pictures,
                       ),
                     ],
                   ),
                 ),
                 const SizedBox(height: 20),
                 for (final picture in astronomyPictures)
-                  InkWell(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          // builder: (context) => AstronomyPictureDetailScreen(movie: movie),
-                          builder: (context) =>
-                              PictureDetailScreen(astronomyPicture: picture),
-                        ),
-                      );
-                    },
-                    child: AstronomyPictureListItem(
-                      title: picture.title,
-                      imageUrl: picture.url,
-                      information: '${picture.date} | ${picture.explanation}',
-                    ),
-                  ),
+                  if (picture.mediaType == 'image' ||
+                      picture.mediaType == 'gif')
+                    InkWell(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                PictureDetailScreen(astronomyPicture: picture),
+                          ),
+                        );
+                      },
+                      child: AstronomyPictureListItem(
+                        title: picture.title,
+                        imageUrl: picture.url,
+                        information: '${picture.date} | ${picture.explanation}',
+                        mediaType: picture.mediaType,
+                      ),
+                    )
               ],
             ),
           ),
@@ -118,22 +120,6 @@ class HomeView extends StatelessWidget {
       ),
     );
   }
-
-  // List<AstronomyPictureModel> getAstronomyPictures() {
-  //   const apiKey = "DIJtrZ1BcoBUmv8BnNcoz67g1YeZaa9Zq8jkDnEU";
-  //   // const apiKey = "sdsfsdf";
-  //   final logger = Logger();
-  //   final dio = Dio();
-  //   final APODRepository apodRepository = APODRepository(apodApi: APODApi(dio));
-  //   apodRepository.getApods(10, true, apiKey).then((value) {
-  //     // logger.i(value);
-  //     for (var element in value) {
-  //       logger.i(element.title);
-  //     }
-  //     return value;
-  //   });
-  //   return AstronomyPictureModel.astronomyPictures;
-  // }
 }
 
 class _CustomClipper extends CustomClipper<Path> {

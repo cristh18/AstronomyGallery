@@ -4,13 +4,15 @@ class AstronomyPictureListItem extends StatelessWidget {
   final String title;
   final String imageUrl;
   final String information;
+  final String mediaType;
   final GlobalKey backgroundImageKey = GlobalKey();
 
   AstronomyPictureListItem({
     super.key,
     required this.title,
-    required this.imageUrl,    
+    required this.imageUrl,
     required this.information,
+    required this.mediaType,
   });
 
   @override
