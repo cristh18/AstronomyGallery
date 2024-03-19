@@ -9,12 +9,16 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
-
 Future main() async {
   await dotenv.load();
   await Hive.initFlutter();
+  var box = await Hive.openBox('myBox');
   Hive.registerAdapter(APODEntityAdapter());
   runApp(const MyApp());
+
+  WidgetsBinding.instance.addPostFrameCallback((_) {
+    box.close();
+  });
 }
 
 class MyApp extends StatelessWidget {

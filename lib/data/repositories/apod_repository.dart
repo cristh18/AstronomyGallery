@@ -40,16 +40,30 @@ class APODRepository {
         .toList();
     final box = await Hive.openBox<List<APODEntity>>('apodBox');
     box.put('apodList', apodEntities);
-    getLocalAstronomyPictures();
-    // box.close();
   }
 
   // Retrieve the list
-  Future<List<APODEntity>?> getLocalAstronomyPictures() async {
+  Future<List<AstronomyPictureModel>?> getLocalAstronomyPictures() async {
     final logger = Logger();
-    final box = await Hive.openBox<List<APODEntity>>('apodBox');
-    List<APODEntity>? data =  box.get('apodList');
-    data?.forEach((element) { logger.i("Database element: ${element.title}");});
-    return data;
+    try {
+      final box = await Hive.openBox<List<APODEntity>>('apodBox');
+      List<APODEntity>? data = box.get('apodList');
+      data?.forEach((element) {
+        logger.i("Database element: ${element.title}");
+      });
+      return data
+              ?.map((APODEntity entity) => AstronomyPictureModel(
+                  title: entity.title,
+                  explanation: entity.explanation,
+                  date: entity.date,
+                  url: entity.url,
+                  hdurl: entity.hdurl,
+                  mediaType: entity.mediaType,
+                  serviceVersion: entity.serviceVersion))
+              .toList() ??
+          [];
+    } catch (e) {
+      return [];
+    }
   }
 }

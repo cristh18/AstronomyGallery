@@ -45,9 +45,23 @@ class HomeView extends StatelessWidget {
                 child: CircularProgressIndicator(),
               );
             case HomeStatus.error:
-              return const Center(
-                child: Text('Error'),
-              );
+              List<AstronomyPictureModel> localAstronomyPictures =
+                  state.astronomyPictures;
+              if (localAstronomyPictures.isEmpty) {
+                return RefreshIndicator(
+                  onRefresh: cubit.getAstronomyPictures,
+                  child: ListView(
+                    children: const [
+                      Center(
+                        child: Text('Error'),
+                      ),
+                    ],
+                  ),
+                );
+              } else {
+                return _BuildAPODBodyWidget(
+                    astronomyPictures: localAstronomyPictures, cubit: cubit);
+              }
             case HomeStatus.success:
               List<AstronomyPictureModel> astronomyPictures =
                   state.astronomyPictures;

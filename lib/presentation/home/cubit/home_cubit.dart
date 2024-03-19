@@ -29,7 +29,11 @@ class HomeCubit extends Cubit<HomeState> {
         astronomyPictures: astronomyPictures,
       ));
     } catch (e) {
-      emit(state.copyWith(status: HomeStatus.error));
+      // emit(state.copyWith(status: HomeStatus.error));
+      final localAstronomyPictures =
+          await apodRepository.getLocalAstronomyPictures() ?? [];
+      emit(state.copyWith(status: HomeStatus.error,
+      astronomyPictures: localAstronomyPictures));
     }
   }
 }
