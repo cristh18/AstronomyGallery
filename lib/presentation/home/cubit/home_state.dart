@@ -6,7 +6,7 @@ enum HomeStatus {
   error,
 }
 
-class HomeState {
+class HomeState extends Equatable {
   HomeState({
     this.status = HomeStatus.loading,
     this.astronomyPictures = const <AstronomyPictureModel>[],
@@ -24,4 +24,7 @@ class HomeState {
       astronomyPictures: astronomyPictures ?? this.astronomyPictures,
     );
   }
+  
+  @override
+  List<Object?> get props => [status, astronomyPictures];
 }

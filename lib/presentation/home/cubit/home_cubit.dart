@@ -1,6 +1,7 @@
 import 'package:astronomy_gallery/data/repositories/apod_repository.dart';
 import 'package:astronomy_gallery/domain/models/astronomy_picture_model.dart';
 import 'package:bloc/bloc.dart';
+import 'package:equatable/equatable.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:logger/logger.dart';
 
@@ -29,7 +30,6 @@ class HomeCubit extends Cubit<HomeState> {
         astronomyPictures: astronomyPictures,
       ));
     } catch (e) {
-      // emit(state.copyWith(status: HomeStatus.error));
       final localAstronomyPictures =
           await apodRepository.getLocalAstronomyPictures() ?? [];
       emit(state.copyWith(status: HomeStatus.error,
