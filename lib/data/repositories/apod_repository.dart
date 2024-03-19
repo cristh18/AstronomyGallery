@@ -1,15 +1,16 @@
-import 'package:astronomy_gallery/data/datasource/local/entities/apod_entity.dart';
-import 'package:astronomy_gallery/data/datasource/remote/api/apod_api.dart';
-import 'package:astronomy_gallery/data/datasource/remote/dto/apod_response_dto.dart';
-import 'package:astronomy_gallery/data/datasource/remote/mappers/apod_response_dto_mapper.dart';
-import 'package:astronomy_gallery/domain/models/astronomy_picture_model.dart';
 import 'package:hive/hive.dart';
 import 'package:logger/logger.dart';
 
+import '../../domain/models/astronomy_picture_model.dart';
+import '../datasource/local/entities/apod_entity.dart';
+import '../datasource/remote/api/apod_api.dart';
+import '../datasource/remote/dto/apod_response_dto.dart';
+import '../datasource/remote/mappers/apod_response_dto_mapper.dart';
+
 class APODRepository {
-  final APODApi apodApi;
 
   APODRepository({required this.apodApi});
+  final APODApi apodApi;
 
   Future<List<AstronomyPictureModel>> getApods(
       int count, bool thumbs, String apiKey) {
@@ -38,18 +39,18 @@ class APODRepository {
               serviceVersion: apod.serviceVersion,
             ))
         .toList();
-    final box = await Hive.openBox<List<APODEntity>>('apodBox');
+    final Box<List<APODEntity>> box = await Hive.openBox<List<APODEntity>>('apodBox');
     box.put('apodList', apodEntities);
   }
 
   // Retrieve the list
   Future<List<AstronomyPictureModel>?> getLocalAstronomyPictures() async {
-    final logger = Logger();
+    final Logger logger = Logger();
     try {
-      final box = await Hive.openBox<List<APODEntity>>('apodBox');
-      List<APODEntity>? data = box.get('apodList');
-      data?.forEach((element) {
-        logger.i("Database element: ${element.title}");
+      final Box<List<APODEntity>> box = await Hive.openBox<List<APODEntity>>('apodBox');
+      final List<APODEntity>? data = box.get('apodList');
+      data?.forEach((APODEntity element) {
+        logger.i('Database element: ${element.title}');
       });
       return data
               ?.map((APODEntity entity) => AstronomyPictureModel(
@@ -61,9 +62,9 @@ class APODRepository {
                   mediaType: entity.mediaType,
                   serviceVersion: entity.serviceVersion))
               .toList() ??
-          [];
+          <AstronomyPictureModel>[];
     } catch (e) {
-      return [];
+      return <AstronomyPictureModel>[];
     }
   }
 }

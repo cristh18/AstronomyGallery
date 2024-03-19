@@ -7,7 +7,7 @@ enum HomeStatus {
 }
 
 class HomeState extends Equatable {
-  HomeState({
+  const HomeState({
     this.status = HomeStatus.loading,
     this.astronomyPictures = const <AstronomyPictureModel>[],
   });
@@ -26,5 +26,5 @@ class HomeState extends Equatable {
   }
   
   @override
-  List<Object?> get props => [status, astronomyPictures];
+  List<Object?> get props => <Object?>[status, astronomyPictures];
 }

@@ -3,6 +3,15 @@ part 'apod_entity.g.dart';
 
 @HiveType(typeId: 0)
 class APODEntity extends HiveObject {
+  APODEntity({
+    required this.title,
+    required this.explanation,
+    required this.date,
+    required this.url,
+    required this.hdurl,
+    required this.mediaType,
+    required this.serviceVersion,
+  });
   @HiveField(0)
   final String title;
 
@@ -23,32 +32,4 @@ class APODEntity extends HiveObject {
 
   @HiveField(6)
   final String serviceVersion;
-
-  APODEntity({
-    required this.title,
-    required this.explanation,
-    required this.date,
-    required this.url,
-    required this.hdurl,
-    required this.mediaType,
-    required this.serviceVersion,
-  });
-
-  // factory APODEntity.fromJson(Map<String, dynamic> json) {
-  //   return APODEntity(
-  //     title: json['title'],
-  //     explanation: json['explanation'],
-  //     url: json['url'],
-  //     date: json['date'],
-  //   );
-  // }
-
-  // Map<String, dynamic> toJson() {
-  //   return {
-  //     'title': title,
-  //     'explanation': explanation,
-  //     'url': url,
-  //     'date': date,
-  //   };
-  // }
 }

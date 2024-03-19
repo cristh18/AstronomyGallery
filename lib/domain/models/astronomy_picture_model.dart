@@ -17,7 +17,7 @@ class AstronomyPictureModel {
   final String mediaType;
   final String serviceVersion;
 
-  static const List<AstronomyPictureModel> astronomyPictures = [
+  static const List<AstronomyPictureModel> astronomyPictures = <AstronomyPictureModel>[
     AstronomyPictureModel(
       title: 'The Sea Beast',
       explanation:

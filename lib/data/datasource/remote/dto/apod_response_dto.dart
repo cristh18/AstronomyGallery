@@ -2,13 +2,6 @@ import 'package:json_annotation/json_annotation.dart';
 
 @JsonSerializable(explicitToJson: true)
 class APODResponseDTO {
-  final String date;
-  final String explanation;
-  final String hdurl;
-  final String mediaType;
-  final String serviceVersion;
-  final String title;
-  final String url;
 
   APODResponseDTO({
     required this.date,
@@ -31,4 +24,11 @@ class APODResponseDTO {
       url: json['url'] ?? '',
     );
   }
+  final String date;
+  final String explanation;
+  final String hdurl;
+  final String mediaType;
+  final String serviceVersion;
+  final String title;
+  final String url;
 }

@@ -1,5 +1,5 @@
-import 'package:astronomy_gallery/data/datasource/remote/dto/apod_response_dto.dart';
-import 'package:astronomy_gallery/domain/models/astronomy_picture_model.dart';
+import '../../../../domain/models/astronomy_picture_model.dart';
+import '../dto/apod_response_dto.dart';
 
 extension APODResponseDTOMapper on APODResponseDTO {
   AstronomyPictureModel toDomain() {

@@ -1,10 +1,11 @@
-import 'package:astronomy_gallery/domain/models/astronomy_picture_model.dart';
-import 'package:astronomy_gallery/presentation/home/cubit/home_cubit.dart';
-import 'package:astronomy_gallery/presentation/home/ui/items/astronomy_picture_list_item.dart';
-import 'package:astronomy_gallery/presentation/apod_detail/screens/picture_detail_screen.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+import '../../../domain/models/astronomy_picture_model.dart';
+import '../../apod_detail/screens/picture_detail_screen.dart';
+import '../cubit/home_cubit.dart';
+import 'items/astronomy_picture_list_item.dart';
 
 class HomeView extends StatelessWidget {
   const HomeView({super.key});
@@ -37,7 +38,7 @@ class HomeView extends StatelessWidget {
       ),
       extendBodyBehindAppBar: true,
       body: BlocBuilder<HomeCubit, HomeState>(
-        builder: (context, state) {
+        builder: (BuildContext context, HomeState state) {
           final HomeCubit cubit = context.read<HomeCubit>();
           switch (state.status) {
             case HomeStatus.loading:
@@ -45,13 +46,13 @@ class HomeView extends StatelessWidget {
                 child: CircularProgressIndicator(),
               );
             case HomeStatus.error:
-              List<AstronomyPictureModel> localAstronomyPictures =
+              final List<AstronomyPictureModel> localAstronomyPictures =
                   state.astronomyPictures;
               if (localAstronomyPictures.isEmpty) {
                 return RefreshIndicator(
                   onRefresh: cubit.getAstronomyPictures,
                   child: ListView(
-                    children: const [
+                    children: const <Widget>[
                       Center(
                         child: Text('Error'),
                       ),
@@ -63,7 +64,7 @@ class HomeView extends StatelessWidget {
                     astronomyPictures: localAstronomyPictures, cubit: cubit);
               }
             case HomeStatus.success:
-              List<AstronomyPictureModel> astronomyPictures =
+              final List<AstronomyPictureModel> astronomyPictures =
                   state.astronomyPictures;
               return _BuildAPODBodyWidget(
                   astronomyPictures: astronomyPictures, cubit: cubit);
@@ -91,7 +92,7 @@ class _BuildAPODBodyWidget extends StatelessWidget {
         bottom: 20,
       ),
       child: Column(
-        children: [
+        children: <Widget>[
           Text(
             AppLocalizations.of(context)!.featuredPictures,
             style: Theme.of(context)
@@ -100,7 +101,6 @@ class _BuildAPODBodyWidget extends StatelessWidget {
                 .copyWith(fontWeight: FontWeight.bold),
           ),
           Expanded(
-            flex: 1,
             child: __BuildListWidget(
               astronomyPictures: astronomyPictures,
               onRefresh: cubit.getAstronomyPictures,
@@ -128,15 +128,15 @@ class __BuildListWidget extends StatelessWidget {
         padding: const EdgeInsets.only(top: 20),
         shrinkWrap: true,
         itemCount: astronomyPictures.length,
-        itemBuilder: (context, index) {
-          final picture = astronomyPictures[index];
+        itemBuilder: (BuildContext context, int index) {
+          final AstronomyPictureModel picture = astronomyPictures[index];
           if (picture.mediaType == 'image' || picture.mediaType == 'gif') {
             return InkWell(
               onTap: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) =>
+                    builder: (BuildContext context) =>
                         PictureDetailScreen(astronomyPicture: picture),
                   ),
                 );
@@ -160,9 +160,9 @@ class __BuildListWidget extends StatelessWidget {
 class _CustomClipper extends CustomClipper<Path> {
   @override
   Path getClip(Size size) {
-    double height = size.height;
-    double width = size.width;
-    var path = Path();
+    final double height = size.height;
+    final double width = size.width;
+    final Path path = Path();
     path.lineTo(0, height - 50);
     path.quadraticBezierTo(width / 2, height, width, height - 50);
     path.lineTo(width, 0);

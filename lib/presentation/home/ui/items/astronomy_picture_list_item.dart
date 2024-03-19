@@ -1,11 +1,6 @@
 import 'package:flutter/material.dart';
 
 class AstronomyPictureListItem extends StatelessWidget {
-  final String title;
-  final String imageUrl;
-  final String information;
-  final String mediaType;
-  final GlobalKey backgroundImageKey = GlobalKey();
 
   AstronomyPictureListItem({
     super.key,
@@ -14,6 +9,11 @@ class AstronomyPictureListItem extends StatelessWidget {
     required this.information,
     required this.mediaType,
   });
+  final String title;
+  final String imageUrl;
+  final String information;
+  final String mediaType;
+  final GlobalKey backgroundImageKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
@@ -24,14 +24,14 @@ class AstronomyPictureListItem extends StatelessWidget {
         child: ClipRRect(
           borderRadius: BorderRadius.circular(15),
           child: Stack(
-            children: [
+            children: <Widget>[
               Flow(
                 delegate: _ParallaxFlowDelegate(
                   scrollable: Scrollable.of(context),
                   listItemContext: context,
                   backgroundImageKey: backgroundImageKey,
                 ),
-                children: [
+                children: <Widget>[
                   Image.network(
                     imageUrl,
                     key: backgroundImageKey,
@@ -43,13 +43,13 @@ class AstronomyPictureListItem extends StatelessWidget {
                 child: DecoratedBox(
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
-                      colors: [
+                      colors: <Color>[
                         Colors.transparent,
                         Colors.black.withOpacity(0.7)
                       ],
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
-                      stops: const [0.6, 0.95],
+                      stops: const <double>[0.6, 0.95],
                     ),
                   ),
                 ),
@@ -60,7 +60,7 @@ class AstronomyPictureListItem extends StatelessWidget {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
+                  children: <Widget>[
                     Text(
                       title,
                       style: Theme.of(context).textTheme.titleLarge!.copyWith(
@@ -87,15 +87,15 @@ class AstronomyPictureListItem extends StatelessWidget {
 }
 
 class _ParallaxFlowDelegate extends FlowDelegate {
-  final ScrollableState scrollable;
-  final BuildContext listItemContext;
-  final GlobalKey backgroundImageKey;
 
   _ParallaxFlowDelegate({
     required this.scrollable,
     required this.listItemContext,
     required this.backgroundImageKey,
   }) : super(repaint: scrollable.position);
+  final ScrollableState scrollable;
+  final BuildContext listItemContext;
+  final GlobalKey backgroundImageKey;
 
   @override
   BoxConstraints getConstraintsForChild(int i, BoxConstraints constraints) {
@@ -105,30 +105,30 @@ class _ParallaxFlowDelegate extends FlowDelegate {
   @override
   void paintChildren(FlowPaintingContext context) {
     // Calculate the position of this list item within the viewport.
-    final scrollableBox = scrollable.context.findRenderObject() as RenderBox;
-    final listItemBox = listItemContext.findRenderObject() as RenderBox;
-    final listItemOffset = listItemBox.localToGlobal(
+    final RenderBox scrollableBox = scrollable.context.findRenderObject()! as RenderBox;
+    final RenderBox listItemBox = listItemContext.findRenderObject()! as RenderBox;
+    final Offset listItemOffset = listItemBox.localToGlobal(
       listItemBox.size.centerLeft(Offset.zero),
       ancestor: scrollableBox,
     );
 
     // Determine the percent position of this list item within the
     // scrollable area.
-    final viewportDimension = scrollable.position.viewportDimension;
-    final scrollFraction =
+    final double viewportDimension = scrollable.position.viewportDimension;
+    final double scrollFraction =
         (listItemOffset.dy / viewportDimension).clamp(0.0, 1.0);
 
     // Calculate the vertical alignment of the background
     // based on the scroll percent.
-    final verticalAlignment = Alignment(0.0, scrollFraction * 2 - 1);
+    final Alignment verticalAlignment = Alignment(0.0, scrollFraction * 2 - 1);
 
     // Convert the background alignment into a pixel offset for
     // painting purposes.
-    final backgroundSize =
-        (backgroundImageKey.currentContext!.findRenderObject() as RenderBox)
+    final Size backgroundSize =
+        (backgroundImageKey.currentContext!.findRenderObject()! as RenderBox)
             .size;
-    final listItemSize = context.size;
-    final childRect = verticalAlignment.inscribe(
+    final Size listItemSize = context.size;
+    final Rect childRect = verticalAlignment.inscribe(
       backgroundSize,
       Offset.zero & listItemSize,
     );

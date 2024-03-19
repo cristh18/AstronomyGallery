@@ -1,5 +1,6 @@
-import 'package:astronomy_gallery/domain/models/astronomy_picture_model.dart';
 import 'package:flutter/material.dart';
+
+import '../../../domain/models/astronomy_picture_model.dart';
 
 class PictureDetailScreen extends StatelessWidget {
   const PictureDetailScreen({
@@ -13,7 +14,7 @@ class PictureDetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
-        children: [
+        children: <Widget>[
           ..._buildBackground(context),
           _buildMovieInformation(context),
         ],
@@ -28,7 +29,7 @@ class PictureDetailScreen extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Column(
-          children: [
+          children: <Widget>[
             Text(
               astronomyPicture.title,
               style: const TextStyle(
@@ -52,7 +53,7 @@ class PictureDetailScreen extends StatelessWidget {
   }
 
   List<Widget> _buildBackground(context) {
-    return [
+    return <Widget>[
       Container(
         height: double.infinity,
         color: const Color(0xFF000B49),
@@ -67,13 +68,13 @@ class PictureDetailScreen extends StatelessWidget {
         child: DecoratedBox(
           decoration: BoxDecoration(
             gradient: LinearGradient(
-              colors: [
+              colors: <Color>[
                 Colors.transparent,
                 Color(0xFF000B49),
               ],
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
-              stops: [0.3, 0.5],
+              stops: <double>[0.3, 0.5],
             ),
           ),
         ),
