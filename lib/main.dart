@@ -1,3 +1,4 @@
+import 'package:astronomy_gallery/data/datasource/local/entities/apod_entity.dart';
 import 'package:astronomy_gallery/data/datasource/remote/api/apod_api.dart';
 import 'package:astronomy_gallery/data/repositories/apod_repository.dart';
 import 'package:dio/dio.dart';
@@ -6,9 +7,13 @@ import 'package:astronomy_gallery/presentation/home/ui/home_page.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+
 
 Future main() async {
   await dotenv.load();
+  await Hive.initFlutter();
+  Hive.registerAdapter(APODEntityAdapter());
   runApp(const MyApp());
 }
 
