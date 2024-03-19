@@ -11,7 +11,7 @@ class HomeCubit extends Cubit<HomeState> {
   final APODRepository apodRepository;
 
   Future<void> getAstronomyPictures() async {
-    const count = 10;
+    const count = 100;
     const thumbs = true;
     String apiKey = dotenv.env['NASA_API_KEY'] ?? '';
 

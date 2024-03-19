@@ -65,58 +65,62 @@ class HomeView extends StatelessWidget {
   SingleChildScrollView getAPODBodyView(
       BuildContext context, List<AstronomyPictureModel> astronomyPictures) {
     return SingleChildScrollView(
-      child: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 20,
-              vertical: 150,
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                RichText(
-                  text: TextSpan(
-                    style: Theme.of(context).textTheme.titleLarge,
-                    children: [
-                      TextSpan(
-                        text: AppLocalizations.of(context)!.featured,
-                        style: Theme.of(context)
-                            .textTheme
-                            .titleLarge!
-                            .copyWith(fontWeight: FontWeight.bold),
-                      ),
-                      TextSpan(
-                        text: AppLocalizations.of(context)!.pictures,
-                      ),
-                    ],
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: 20,
+          vertical: 150,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            RichText(
+              text: TextSpan(
+                style: Theme.of(context).textTheme.titleLarge,
+                children: [
+                  TextSpan(
+                    text:
+                        '${AppLocalizations.of(context)!.featured} ${AppLocalizations.of(context)!.pictures}',
+                    style: Theme.of(context)
+                        .textTheme
+                        .titleLarge!
+                        .copyWith(fontWeight: FontWeight.bold),
                   ),
-                ),
-                const SizedBox(height: 20),
-                for (final picture in astronomyPictures)
-                  if (picture.mediaType == 'image' ||
-                      picture.mediaType == 'gif')
-                    InkWell(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                PictureDetailScreen(astronomyPicture: picture),
-                          ),
-                        );
-                      },
-                      child: AstronomyPictureListItem(
-                        title: picture.title,
-                        imageUrl: picture.url,
-                        information: '${picture.date} | ${picture.explanation}',
-                        mediaType: picture.mediaType,
-                      ),
-                    )
-              ],
+                ],
+              ),
             ),
-          ),
-        ],
+            const SizedBox(height: 20),
+            ListView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: astronomyPictures.length,
+              itemBuilder: (context, index) {
+                final picture = astronomyPictures[index];
+                if (picture.mediaType == 'image' ||
+                    picture.mediaType == 'gif') {
+                  return InkWell(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              PictureDetailScreen(astronomyPicture: picture),
+                        ),
+                      );
+                    },
+                    child: AstronomyPictureListItem(
+                      title: picture.title,
+                      imageUrl: picture.url,
+                      information: '${picture.date} | ${picture.explanation}',
+                      mediaType: picture.mediaType,
+                    ),
+                  );
+                } else {
+                  return const SizedBox.shrink();
+                }
+              },
+            ),
+          ],
+        ),
       ),
     );
   }
