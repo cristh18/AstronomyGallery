@@ -4,7 +4,6 @@ import 'package:astronomy_gallery/presentation/home/ui/items/astronomy_picture_l
 import 'package:astronomy_gallery/presentation/apod_detail/screens/picture_detail_screen.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class HomeView extends StatelessWidget {
@@ -39,6 +38,7 @@ class HomeView extends StatelessWidget {
       extendBodyBehindAppBar: true,
       body: BlocBuilder<HomeCubit, HomeState>(
         builder: (context, state) {
+          final HomeCubit cubit = context.read<HomeCubit>();
           switch (state.status) {
             case HomeStatus.loading:
               return const Center(
@@ -51,76 +51,99 @@ class HomeView extends StatelessWidget {
             case HomeStatus.success:
               List<AstronomyPictureModel> astronomyPictures =
                   state.astronomyPictures;
-              final logger = Logger();
-              for (var element in astronomyPictures) {
-                logger.i(element.toString());
-              }
-              return getAPODBodyView(context, astronomyPictures);
+              return _BuildAPODBodyWidget(
+                  astronomyPictures: astronomyPictures, cubit: cubit);
           }
         },
       ),
     );
   }
+}
 
-  SingleChildScrollView getAPODBodyView(
-      BuildContext context, List<AstronomyPictureModel> astronomyPictures) {
-    return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 20,
-          vertical: 150,
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            RichText(
-              text: TextSpan(
-                style: Theme.of(context).textTheme.titleLarge,
-                children: [
-                  TextSpan(
-                    text:
-                        '${AppLocalizations.of(context)!.featured} ${AppLocalizations.of(context)!.pictures}',
-                    style: Theme.of(context)
-                        .textTheme
-                        .titleLarge!
-                        .copyWith(fontWeight: FontWeight.bold),
+class _BuildAPODBodyWidget extends StatelessWidget {
+  const _BuildAPODBodyWidget({
+    required this.astronomyPictures,
+    required this.cubit,
+  });
+
+  final List<AstronomyPictureModel> astronomyPictures;
+  final HomeCubit cubit;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+        horizontal: 20,
+        vertical: 150,
+      ),
+      child: Column(
+        children: [
+          RichText(
+            text: TextSpan(
+              style: Theme.of(context).textTheme.titleLarge,
+              children: [
+                TextSpan(
+                  text:
+                      '${AppLocalizations.of(context)!.featured} ${AppLocalizations.of(context)!.pictures}',
+                  style: Theme.of(context)
+                      .textTheme
+                      .titleLarge!
+                      .copyWith(fontWeight: FontWeight.bold),
+                ),
+              ],
+            ),
+          ),
+          Expanded(
+              child: __BuildListWidget(
+            astronomyPictures: astronomyPictures,
+            onRefresh: cubit.getAstronomyPictures,
+          )),
+        ],
+      ),
+    );
+  }
+}
+
+class __BuildListWidget extends StatelessWidget {
+  const __BuildListWidget({
+    required this.astronomyPictures,
+    required this.onRefresh,
+  });
+
+  final List<AstronomyPictureModel> astronomyPictures;
+  final RefreshCallback onRefresh;
+
+  @override
+  Widget build(BuildContext context) {
+    return RefreshIndicator(
+      onRefresh: () => onRefresh(),
+      child: ListView.builder(
+        shrinkWrap: true,
+        itemCount: astronomyPictures.length,
+        itemBuilder: (context, index) {
+          final picture = astronomyPictures[index];
+          if (picture.mediaType == 'image' || picture.mediaType == 'gif') {
+            return InkWell(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        PictureDetailScreen(astronomyPicture: picture),
                   ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 20),
-            ListView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: astronomyPictures.length,
-              itemBuilder: (context, index) {
-                final picture = astronomyPictures[index];
-                if (picture.mediaType == 'image' ||
-                    picture.mediaType == 'gif') {
-                  return InkWell(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              PictureDetailScreen(astronomyPicture: picture),
-                        ),
-                      );
-                    },
-                    child: AstronomyPictureListItem(
-                      title: picture.title,
-                      imageUrl: picture.url,
-                      information: '${picture.date} | ${picture.explanation}',
-                      mediaType: picture.mediaType,
-                    ),
-                  );
-                } else {
-                  return const SizedBox.shrink();
-                }
+                );
               },
-            ),
-          ],
-        ),
+              child: AstronomyPictureListItem(
+                title: picture.title,
+                imageUrl: picture.url,
+                information: '${picture.date} | ${picture.explanation}',
+                mediaType: picture.mediaType,
+              ),
+            );
+          } else {
+            return const SizedBox.shrink();
+          }
+        },
       ),
     );
   }
