@@ -1,6 +1,5 @@
 {
     "@@locale": "es",
     "explore": "Explorar",
-    "featured": "Destacadas ",
-    "pictures": "Fotos"
+    "featuredPictures": "Fotos Destacadas"
 }

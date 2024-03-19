@@ -1,6 +1,5 @@
 {
   "@@locale": "en",
   "explore": "Explore",
-  "featured": "Featured ",
-  "pictures": "Pictures"
+  "featuredPictures": "Featured Pictures"
 }

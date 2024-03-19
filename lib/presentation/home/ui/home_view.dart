@@ -65,39 +65,33 @@ class _BuildAPODBodyWidget extends StatelessWidget {
     required this.astronomyPictures,
     required this.cubit,
   });
-
   final List<AstronomyPictureModel> astronomyPictures;
   final HomeCubit cubit;
-
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 20,
-        vertical: 150,
+      padding: const EdgeInsets.only(
+        left: 20,
+        right: 20,
+        top: 150,
+        bottom: 20,
       ),
       child: Column(
         children: [
-          RichText(
-            text: TextSpan(
-              style: Theme.of(context).textTheme.titleLarge,
-              children: [
-                TextSpan(
-                  text:
-                      '${AppLocalizations.of(context)!.featured} ${AppLocalizations.of(context)!.pictures}',
-                  style: Theme.of(context)
-                      .textTheme
-                      .titleLarge!
-                      .copyWith(fontWeight: FontWeight.bold),
-                ),
-              ],
-            ),
+          Text(
+            AppLocalizations.of(context)!.featuredPictures,
+            style: Theme.of(context)
+                .textTheme
+                .titleLarge!
+                .copyWith(fontWeight: FontWeight.bold),
           ),
           Expanded(
-              child: __BuildListWidget(
-            astronomyPictures: astronomyPictures,
-            onRefresh: cubit.getAstronomyPictures,
-          )),
+            flex: 1,
+            child: __BuildListWidget(
+              astronomyPictures: astronomyPictures,
+              onRefresh: cubit.getAstronomyPictures,
+            ),
+          ),
         ],
       ),
     );
@@ -109,15 +103,15 @@ class __BuildListWidget extends StatelessWidget {
     required this.astronomyPictures,
     required this.onRefresh,
   });
-
   final List<AstronomyPictureModel> astronomyPictures;
   final RefreshCallback onRefresh;
 
   @override
   Widget build(BuildContext context) {
     return RefreshIndicator(
-      onRefresh: () => onRefresh(),
+      onRefresh: onRefresh,
       child: ListView.builder(
+        padding: const EdgeInsets.only(top: 20),
         shrinkWrap: true,
         itemCount: astronomyPictures.length,
         itemBuilder: (context, index) {
